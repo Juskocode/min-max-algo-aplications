@@ -14,6 +14,12 @@
         <button onclick="chooseSymbol('O')">O</button>
     </div>
 
+	 <!-- Depth selection -->
+	 <div class="depth-selection">
+        <label for="depth">Select Minimax Depth: <span id="depth-value">9</span></label>
+        <input type="range" id="depth" min="1" max="9" value="9" oninput="updateDepth(this.value)">
+    </div>
+
     <!-- Tic-tac-toe board -->
     <table>
         <tr>
@@ -33,13 +39,16 @@
         </tr>
     </table>
 
+	<!-- Statistics -->
+	<div class="stats"></div>
+
     <!-- Endgame message -->
     <div class="endgame">
         <div class="text"></div>
     </div>
 
     <!-- Replay button -->
-    <button onClick="startGame()">Replay</button>
+	<button class="replay-button" onClick="startGame()">Replay</button>
 
     <script src="js/script.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>

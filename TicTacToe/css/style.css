@@ -95,23 +95,45 @@ td:hover {
     opacity: 1;
 }
 
-/* Button Styles */
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Replay Button */
+.replay-button {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    font-size: 18px; /* Font size */
+    padding: 10px 20px; /* Padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
+    position: absolute; /* Absolute positioning */
+    bottom: 20px; /* Position it at the bottom */
+    left: 50%; /* Center it horizontally */
+    transform: translateX(-50%); /* Offset for perfect centering */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Animation on hover */
 }
 
-/* Button Hover Effect */
-button:hover {
-    background-color: #45a049;
+/* Hover effect */
+.replay-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateX(-50%) scale(1.1); /* Scale up slightly */
 }
+
+/* Add animation when the button is shown */
+.replay-button.show {
+    animation: fadeIn 0.5s ease; /* Fade-in animation */
+}
+
+/* Keyframes for fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start invisible */
+        transform: translateY(20px); /* Start below */
+    }
+    to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* End at normal position */
+    }
+}
+
 
 /* Animation on Cell Click */
 .cell-clicked {
@@ -140,8 +162,10 @@ button:hover {
     color: white;
 }
 .choose-symbol button {
+    display: flex;
+    justify-content: center;
     margin: 5px;
-    background-color: #4CAF50;
+    background-color: #2cab30;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -151,3 +175,77 @@ button:hover {
 .choose-symbol button:hover {
     background-color: #45a049;
 }
+/* Statistics Display */
+.stats {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    color: #e6e6e6; /* A lighter color for better contrast */
+    font-size: 20px; /* Slightly larger font */
+    font-family: "Comic Sans MS", cursive, sans-serif; /* Match the game font */
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+    border: 2px solid rgba(255, 255, 255, 0.5); /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Padding for inner spacing */
+    transition: transform 0.3s ease, opacity 0.5s ease; /* Smooth animations */
+    opacity: 0; /* Start invisible for animation */
+}
+
+/* Add animation when updated */
+.stats.show {
+    transform: scale(1.05); /* Slightly scale up */
+    opacity: 1; /* Make it visible */
+}
+
+.stats.hide {
+    transform: scale(0.95); /* Scale down */
+    opacity: 0; /* Fade out */
+}
+
+/* Depth Selection */
+.depth-selection {
+    margin: 20px 0;
+    text-align: center;
+    color: #e6e6e6; /* Light text color */
+}
+
+#depth {
+    -webkit-appearance: none;
+    width: 300px; /* Adjust width as needed */
+    height: 10px; /* Height of the scrollbar */
+    background: rgba(255, 255, 255, 0.2); /* Background of the scrollbar */
+    border-radius: 5px; /* Rounded corners */
+    outline: none; /* Remove outline */
+    transition: background 0.3s; /* Smooth transition */
+}
+
+/* Handle styling */
+#depth::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default appearance */
+    appearance: none;
+    width: 20px; /* Width of the handle */
+    height: 20px; /* Height of the handle */
+    border-radius: 50%; /* Circular handle */
+    background: #00aaff; /* Handle color */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s; /* Smooth transition */
+}
+
+#depth::-webkit-slider-thumb:hover {
+    background: #0088cc; /* Darker handle color on hover */
+}
+
+#depth::-moz-range-thumb {
+    width: 20px; /* Width of the handle */
+    height: 20px; /* Height of the handle */
+    border-radius: 50%; /* Circular handle */
+    background: #00aaff; /* Handle color */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s; /* Smooth transition */
+}
+
+#depth::-moz-range-thumb:hover {
+    background: #0088cc; /* Darker handle color on hover */
+}
+
+

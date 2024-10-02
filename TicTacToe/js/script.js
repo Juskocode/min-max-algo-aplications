@@ -12,6 +12,8 @@ const winCombos = [
     [6, 4, 2]
 ];
 
+let totalStatesSearched = 0;
+let currentDepth = 9;
 const cells = document.querySelectorAll('.cell');
 
 function chooseSymbol(symbol) {
@@ -23,6 +25,8 @@ function chooseSymbol(symbol) {
 }
 
 function startGame() {
+    totalStatesSearched = 0;
+    displayStats();
     // Show symbol selection if called by replay button
     if (!huPlayer || !aiPlayer) {
         document.querySelector(".choose-symbol").style.display = "flex"; // Show symbol selection
@@ -55,9 +59,11 @@ function turnClick(square) {
             }, 500); // Delay added here for AI move
         }
     }
+    totalStatesSearched = 0;
 }
 
 function turn(squareId, player) {
+    displayStats();
     origBoard[squareId] = player;
     document.getElementById(squareId).innerText = player;
     let gameWon = checkWin(origBoard, player);
@@ -85,7 +91,13 @@ function gameOver(gameWon) {
         cells[i].removeEventListener('click', turnClick, false);
     }
     declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose.");
+
+    // Show and animate the replay button
+    const replayButton = document.querySelector(".replay-button");
+    replayButton.classList.add("show"); // Add class to trigger animation
+    totalStatesSearched = 0;
 }
+
 
 function declareWinner(who) {
     document.querySelector(".endgame").style.display = "block";
@@ -93,12 +105,24 @@ function declareWinner(who) {
     document.querySelector(".endgame").classList.add('show'); // Ensure endgame box shows with animation
 }
 
+function displayStats() {
+    const statsElement = document.querySelector(".stats");
+    statsElement.innerText = `States Searched: ${totalStatesSearched}\nMax Depth: ${currentDepth}`;
+    
+    // Trigger the show animation
+    statsElement.classList.remove("hide");
+    void statsElement.offsetWidth; // Trigger reflow to restart the animation
+    statsElement.classList.add("show");
+}
+
+
 function emptySquares() {
     return origBoard.filter(s => typeof s == 'number');
 }
 
 function bestSpot() {
-    return minimax(origBoard, aiPlayer).index;
+    console.log(currentDepth);
+    return minimax(origBoard, aiPlayer, currentDepth).index;
 }
 
 function checkTie() {
@@ -113,7 +137,14 @@ function checkTie() {
     return false;
 }
 
-function minimax(newboard, player) {
+function updateDepth(value) {
+    currentDepth = value;
+    document.getElementById('depth-value').innerText = value; // Update displayed value
+}
+
+function minimax(newboard, player, depth = currentDepth) {
+    totalStatesSearched++;
+
     var spots = emptySquares(newboard);
 
     if (checkWin(newboard, huPlayer))
@@ -123,12 +154,15 @@ function minimax(newboard, player) {
     else if (spots.length === 0)
         return { score: 0 };
 
+    if (depth === 0) return {score: 0}; // Stop search at max depth
+
     var moves = [];
     for (var i = 0; i < spots.length; i++) {
         var move = {};
         move.index = newboard[spots[i]];
         newboard[spots[i]] = player;
-        var res = minimax(newboard, player === aiPlayer ? huPlayer : aiPlayer);
+        var res = minimax(newboard,
+                 player === aiPlayer ? huPlayer : aiPlayer, depth - 1);
         move.score = res.score;
         newboard[spots[i]] = move.index;
         moves.push(move);
