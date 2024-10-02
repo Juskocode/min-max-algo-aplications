@@ -44,6 +44,7 @@ function startGame() {
 
     // If AI is starting (when player chooses 'O')
     if (aiPlayer === 'X') {
+        //turn(Math.floor(Math.random() * 9), aiPlayer);
         turn(bestSpot(), aiPlayer); // AI goes first
     }
 }
@@ -121,8 +122,7 @@ function emptySquares() {
 }
 
 function bestSpot() {
-    console.log(currentDepth);
-    return minimax(origBoard, aiPlayer, currentDepth).index;
+    return minimax(origBoard, aiPlayer, currentDepth, -Infinity, Infinity).index;
 }
 
 function checkTie() {
@@ -142,33 +142,65 @@ function updateDepth(value) {
     document.getElementById('depth-value').innerText = value; // Update displayed value
 }
 
-function minimax(newboard, player, depth = currentDepth) {
-    totalStatesSearched++;
-
+function minimax(newboard, player, depth = currentDepth, alpha, beta) {
     var spots = emptySquares(newboard);
 
-    if (checkWin(newboard, huPlayer))
+    if (checkWin(newboard, huPlayer)) {
+        totalStatesSearched++;
         return { score: -10 };
-    else if (checkWin(newboard, aiPlayer))
+    }
+    else if (checkWin(newboard, aiPlayer)) {
+        totalStatesSearched++;
         return { score: 10 };
-    else if (spots.length === 0)
+    }
+    else if (spots.length === 0) {
+        totalStatesSearched++;
         return { score: 0 };
+    }
 
     if (depth === 0) return {score: 0}; // Stop search at max depth
 
-    var moves = [];
+    // Prioritize center and corners (heuristic for better move ordering)
+    spots.sort((a, b) => {
+        // Prefer center move
+        if (a === 4) return -1;
+        if (b === 4) return 1;
+        // Prefer corner moves
+        if ([0, 2, 6, 8].includes(a)) return -1;
+        if ([0, 2, 6, 8].includes(b)) return 1;
+        return 0;
+    });
+
+    var bestMove = {score : player === aiPlayer ? -Infinity : Infinity};
+
     for (var i = 0; i < spots.length; i++) {
         var move = {};
         move.index = newboard[spots[i]];
+        //set a move
         newboard[spots[i]] = player;
-        var res = minimax(newboard,
-                 player === aiPlayer ? huPlayer : aiPlayer, depth - 1);
+        //minimax on next layer
+        var res = minimax(newboard, player === aiPlayer ? huPlayer : aiPlayer,
+                     depth - 1, alpha, beta);
         move.score = res.score;
+        //backtrack
         newboard[spots[i]] = move.index;
-        moves.push(move);
-    }
+        
+        //Maximizing aiTurn
+        if (player === aiPlayer) {
+            if (move.score > bestMove.score)
+                bestMove = move;
+            alpha = Math.max(alpha, move.score);
+        }
+        //Minimizing humanTurn
+        else {
+            if (move.score < bestMove.score)
+                bestMove = move;
+            beta = Math.max(beta, move.score);
+        }
 
-    return player === aiPlayer ?
-        moves.reduce((best, move) => move.score > best.score ? move : best) :
-        moves.reduce((best, move) => move.score < best.score ? move : best);
+        //prune if alpha >= beta
+        if (alpha >= beta)
+            return bestMove;
+    }
+    return bestMove;
 }
