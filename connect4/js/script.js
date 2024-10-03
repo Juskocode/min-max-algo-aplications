@@ -33,7 +33,6 @@ function turnClick(square) {
         }, 500);
     }
 }
-
 // Function to get the lowest empty row in a column
 function getLowestEmptyRow(col) {
     // Start checking from the bottom row (row index 5) upwards
