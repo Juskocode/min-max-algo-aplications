@@ -1,3 +1,12 @@
+/* Neon colors */
+:root {
+    --neon-green: #50fa7b;
+    --neon-purple: #bd93f9;
+    --neon-dark: #282a36;
+    --neon-glow-green: rgba(80, 250, 123, 0.75);
+    --neon-glow-purple: rgba(189, 147, 249, 0.75);
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #1a1a2e; /* Dark background */
@@ -89,4 +98,46 @@ button:hover {
 #status {
     margin-top: 10px;
     font-weight: bold;
+}
+
+/* Modal for End Game Popup */
+#endgame-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#endgame-modal-content {
+    background-color: var(--neon-dark);
+    border: 2px solid var(--neon-purple);
+    border-radius: 10px;
+    padding: 40px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 0 50px var(--neon-purple);
+    font-size: 1.5em;
+}
+
+#endgame-modal button {
+    background-color: var(--neon-green);
+    color: var(--neon-dark);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px var(--neon-glow-green);
+}
+
+#endgame-modal button:hover {
+    background-color: var(--neon-purple);
+    box-shadow: 0 0 20px var(--neon-glow-purple);
 }

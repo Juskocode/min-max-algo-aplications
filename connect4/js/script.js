@@ -1,31 +1,39 @@
+const ROWS = 6;
+const COLS = 7;
+const WIN_LENGTH = 4;
 var origBoard;
 var huPlayer = 'red';
 var aiPlayer = 'yellow';
-isPlayerTurn = true;
+var isPlayerTurn = true;
+
+var boardMask = Array(COLS).fill(0); // Bitmask to track filled positions for each column
+var huPlayerMask = Array(COLS).fill(0); // Bitmask for human player
+var aiPlayerMask = Array(COLS).fill(0); // Bitmask for AI player
 
 startGame();
 
 function startGame() {
-    origBoard = Array.from(Array(6), () => Array(7).fill(null));
+    origBoard = Array.from(Array(ROWS), () => Array(COLS).fill(null));
     for (var i = 0; i < cells.length; i++) {
         cells[i].innerText = '';
         cells[i].style.removeProperty('background-color');
         cells[i].addEventListener('click', turnClick, false);
     }
+
+    // Hide the end game modal when starting a new game
+    document.getElementById('endgame-modal').style.display = 'none';
 }
 
 function turnClick(square) {
-    if (!isPlayerTurn)
-        return ;
+    if (!isPlayerTurn) return;
 
     const squareId = square.target.id;
-    const col = squareId % 7; 
-    // Find the lowest available empty row in this column
+    const col = squareId % COLS;
     const row = getLowestEmptyRow(col);
-    
-    if (row !== null) { // If there's an empty spot in the column
-        const squareIdToFill = row * 7 + col; // Calculate the cell's ID to be filled
-        turn(squareIdToFill, huPlayer); // Perform the player's turn
+
+    if (row !== null) {
+        const squareIdToFill = row * COLS + col;
+        turn(squareIdToFill, huPlayer);
         isPlayerTurn = false;
 
         setTimeout(() => {
@@ -33,57 +41,124 @@ function turnClick(square) {
         }, 500);
     }
 }
-// Function to get the lowest empty row in a column
+
 function getLowestEmptyRow(col) {
-    // Start checking from the bottom row (row index 5) upwards
-    for (let row = 5; row >= 0; row--) {
+    for (let row = ROWS - 1; row >= 0; row--) {
         if (origBoard[row][col] === null) {
-            return row; // Return the first empty row
+            return row;
         }
     }
-    return null; // Return null if the column is full
+    return null;
 }
 
 function turn(squareId, player) {
-    const row = Math.floor(squareId / 7); // Get the row index
-    const col = squareId % 7; // Get the column index
-    origBoard[row][col] = player; // Update the board array
+    const row = Math.floor(squareId / COLS);
+    const col = squareId % COLS;
+    origBoard[row][col] = player;
 
-    const square = document.getElementById(squareId); // Get the clicked square element
-
-    // Set the color based on the player
-    if (player === aiPlayer) {
-        square.style.backgroundColor = '#ff77e1'; // Set the square to red for huPlayer
-    } else if (player === huPlayer) {
-        square.style.backgroundColor = '#50fa7b'; // Set the square to yellow for aiPlayer
-    }
-
-    // Add the pulse animation class to the square
+    const square = document.getElementById(squareId);
+    square.style.backgroundColor = player === huPlayer ? '#50fa7b' : '#ff77e1';
     square.classList.add('piece-pulse');
 
-    // Remove the animation class after it finishes (optional, for repeated animations)
     setTimeout(() => {
         square.classList.remove('piece-pulse');
-    }, 500); // Match the duration of the pulse animation
+    }, 500);
 
-    // Disable further clicks on this cell
     square.removeEventListener('click', turnClick, false);
-    // Example of alternating turns (if you want to implement AI turn or switch players)
-    // turnAI();
+
+    if (player === huPlayer) {
+        huPlayerMask[col] |= (1 << row); // Update human player bitmask for the column
+    } else {
+        aiPlayerMask[col] |= (1 << row); // Update AI player bitmask for the column
+    }
+
+    boardMask[col] |= (1 << row); // Update the filled position bitmask for the column
+
+    setTimeout(() => {
+        // Check for win or tie
+        if (checkWin(col, player === huPlayer ? huPlayerMask : aiPlayerMask)) {
+            showEndGameModal(`${player} wins!`);
+            return;
+        }
+
+        if (checkTie()) {
+            showEndGameModal("It's a tie!");
+        }
+    }, 500);
 }
 
 function turnAi() {
     let col, row;
-
-    // Find a random column with an empty spot
     do {
-        col = Math.floor(Math.random() * 7); // Randomly choose a column between 0 and 6
-        row = getLowestEmptyRow(col); // Check if there's an empty row in this column
-    } while (row === null); // If the column is full, keep trying another one
+        col = Math.floor(Math.random() * COLS);
+        row = getLowestEmptyRow(col);
+    } while (row === null);
 
-    const squareIdToFill = row * 7 + col; // Calculate the cell's ID to be filled
-    turn(squareIdToFill, aiPlayer); // Perform the AI's turn
+    const squareIdToFill = row * COLS + col;
+    turn(squareIdToFill, aiPlayer);
 
-    // Re-enable the player's turn after AI has moved
     isPlayerTurn = true;
+}
+
+function checkWin(col, playerMask) {
+    const colMask = playerMask[col];
+
+    // Vertical check
+    if (checkDirection(colMask, 1)) return true;
+
+    // Horizontal check
+    let horizontal = 0;
+    for (let i = Math.max(0, col - WIN_LENGTH + 1); i < Math.min(COLS, col + WIN_LENGTH); i++) {
+        horizontal <<= 1;
+        horizontal |= (playerMask[i] >> (ROWS - 1));
+    }
+    if (checkDirection(horizontal, 1)) return true;
+
+    // Diagonal (\) check
+    let diagonal1 = 0;
+    for (let i = -WIN_LENGTH + 1; i < WIN_LENGTH; i++) {
+        const c = col + i;
+        if (c >= 0 && c < COLS) {
+            diagonal1 <<= 1;
+            diagonal1 |= (playerMask[c] >> Math.max(0, i));
+        }
+    }
+    if (checkDirection(diagonal1, 1)) return true;
+
+    // Diagonal (/) check
+    let diagonal2 = 0;
+    for (let i = -WIN_LENGTH + 1; i < WIN_LENGTH; i++) {
+        const c = col + i;
+        if (c >= 0 && c < COLS) {
+            diagonal2 <<= 1;
+            diagonal2 |= (playerMask[c] >> Math.max(0, -i));
+        }
+    }
+    if (checkDirection(diagonal2, 1)) return true;
+
+    return false;
+}
+
+function checkDirection(mask, shift) {
+    return (mask & (mask >> shift) & (mask >> 2 * shift) & (mask >> 3 * shift)) !== 0;
+}
+
+function checkTie() {
+    return origBoard.flat().every(cell => cell !== null);
+}
+
+function resetBoard() {
+    origBoard = Array.from(Array(ROWS), () => Array(COLS).fill(null));
+    boardMask = Array(COLS).fill(0);
+    huPlayerMask = Array(COLS).fill(0);
+    aiPlayerMask = Array(COLS).fill(0);
+    //startGame();
+}
+
+
+function showEndGameModal(message) {
+    const modal = document.getElementById('endgame-modal');
+    modal.style.display = 'flex'; // Show the modal
+    modal.querySelector('p').innerText = message; // Set the message
+    resetBoard();
 }
