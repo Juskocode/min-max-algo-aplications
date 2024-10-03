@@ -1,0 +1,92 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a2e; /* Dark background */
+    color: #eaeaea; /* Light text color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.7); /* Neon text effect */
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    color: #ff77e1; /* Neon pink */
+    margin-bottom: 20px;
+}
+
+.game-board {
+    margin: 20px auto;
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
+}
+
+.cell {
+    width: 60px; /* Adjust width for better visual appearance */
+    height: 60px; /* Adjust height for better visual appearance */
+    border-radius: 50%; /* Circular cells */
+    background-color: #282a36; /* Dark cell background */
+    border: 3px solid transparent; /* Transparent border */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transitions */
+}
+
+.cell:hover {
+    background-color: #554e8b; /* Lighter hover color */
+    transform: scale(1.1);
+}
+
+.red {
+    background-color: #ff5555; /* Neon red */
+    border-color: #ff79c6; /* Neon pink border */
+}
+
+.yellow {
+    background-color: #f1fa8c; /* Neon yellow */
+    border-color: #ff79c6; /* Neon pink border */
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #50fa7b; /* Neon green button */
+    border: none;
+    border-radius: 5px;
+    color: #282a36; /* Dark text for contrast */
+    transition: background-color 0.3s; /* Smooth button hover transition */
+}
+
+button:hover {
+    background-color: #3ee69b; /* Lighter green on hover */
+}
+
+/* Animation on play */
+.piece-pulse {
+    animation: pulse 0.5s;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#status {
+    margin-top: 10px;
+    font-weight: bold;
+}
