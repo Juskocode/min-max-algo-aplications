@@ -6,10 +6,6 @@ var huPlayer = 'red';
 var aiPlayer = 'yellow';
 var isPlayerTurn = true;
 
-var boardMask = Array(COLS).fill(0); // Bitmask to track filled positions for each column
-var huPlayerMask = Array(COLS).fill(0); // Bitmask for human player
-var aiPlayerMask = Array(COLS).fill(0); // Bitmask for AI player
-
 startGame();
 
 function startGame() {
@@ -66,17 +62,9 @@ function turn(squareId, player) {
 
     square.removeEventListener('click', turnClick, false);
 
-    if (player === huPlayer) {
-        huPlayerMask[col] |= (1 << row); // Update human player bitmask for the column
-    } else {
-        aiPlayerMask[col] |= (1 << row); // Update AI player bitmask for the column
-    }
-
-    boardMask[col] |= (1 << row); // Update the filled position bitmask for the column
-
     setTimeout(() => {
         // Check for win or tie
-        if (checkWin(col, player === huPlayer ? huPlayerMask : aiPlayerMask)) {
+        if (checkWin(row, col, player)) {
             showEndGameModal(`${player} wins!`);
             return;
         }
@@ -100,47 +88,36 @@ function turnAi() {
     isPlayerTurn = true;
 }
 
-function checkWin(col, playerMask) {
-    const colMask = playerMask[col];
-
-    // Vertical check
-    if (checkDirection(colMask, 1)) return true;
-
-    // Horizontal check
-    let horizontal = 0;
-    for (let i = Math.max(0, col - WIN_LENGTH + 1); i < Math.min(COLS, col + WIN_LENGTH); i++) {
-        horizontal <<= 1;
-        horizontal |= (playerMask[i] >> (ROWS - 1));
-    }
-    if (checkDirection(horizontal, 1)) return true;
-
-    // Diagonal (\) check
-    let diagonal1 = 0;
-    for (let i = -WIN_LENGTH + 1; i < WIN_LENGTH; i++) {
-        const c = col + i;
-        if (c >= 0 && c < COLS) {
-            diagonal1 <<= 1;
-            diagonal1 |= (playerMask[c] >> Math.max(0, i));
-        }
-    }
-    if (checkDirection(diagonal1, 1)) return true;
-
-    // Diagonal (/) check
-    let diagonal2 = 0;
-    for (let i = -WIN_LENGTH + 1; i < WIN_LENGTH; i++) {
-        const c = col + i;
-        if (c >= 0 && c < COLS) {
-            diagonal2 <<= 1;
-            diagonal2 |= (playerMask[c] >> Math.max(0, -i));
-        }
-    }
-    if (checkDirection(diagonal2, 1)) return true;
-
-    return false;
+function checkWin(row, col, player) {
+    return checkDirection(row, col, player, 1, 0) || // Vertical check
+           checkDirection(row, col, player, 0, 1) || // Horizontal check
+           checkDirection(row, col, player, 1, 1) || // Diagonal (\) check
+           checkDirection(row, col, player, 1, -1);  // Diagonal (/) check
 }
 
-function checkDirection(mask, shift) {
-    return (mask & (mask >> shift) & (mask >> 2 * shift) & (mask >> 3 * shift)) !== 0;
+function checkDirection(row, col, player, deltaRow, deltaCol) {
+    let count = 1;
+
+    // Check in the positive direction (deltaRow, deltaCol)
+    count += countInDirection(row, col, player, deltaRow, deltaCol);
+    // Check in the negative direction (-deltaRow, -deltaCol)
+    count += countInDirection(row, col, player, -deltaRow, -deltaCol);
+
+    return count >= WIN_LENGTH;
+}
+
+function countInDirection(row, col, player, deltaRow, deltaCol) {
+    let r = row + deltaRow;
+    let c = col + deltaCol;
+    let count = 0;
+
+    while (r >= 0 && r < ROWS && c >= 0 && c < COLS && origBoard[r][c] === player) {
+        count++;
+        r += deltaRow;
+        c += deltaCol;
+    }
+
+    return count;
 }
 
 function checkTie() {
@@ -149,12 +126,8 @@ function checkTie() {
 
 function resetBoard() {
     origBoard = Array.from(Array(ROWS), () => Array(COLS).fill(null));
-    boardMask = Array(COLS).fill(0);
-    huPlayerMask = Array(COLS).fill(0);
-    aiPlayerMask = Array(COLS).fill(0);
-    //startGame();
+    isPlayerTurn = true; // Reset player turn
 }
-
 
 function showEndGameModal(message) {
     const modal = document.getElementById('endgame-modal');
