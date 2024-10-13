@@ -11,12 +11,19 @@ export default class Board {
     }
 
     setCell(row, col, playerColor) {
+        //console.log(`Setting cell at row ${row}, col ${col} to ${playerColor}`);
         this.board[row][col] = playerColor;
+    }
+    
+
+    resetCell(row, col) {
+        this.board[row][col] = null;
     }
 
     getCell(row, col) {
         return this.board[row][col];
     }
+
 
     getLowestEmptyRow(col) {
         for (let row = this.rows - 1; row >= 0; row--) {

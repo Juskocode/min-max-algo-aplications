@@ -66,7 +66,7 @@
             </tr>
         </table>
         <div class="controls">
-            <button id="reset" onClick="startGame()">Reset Game</button>
+            <button id="reset" onClick="game.resetGame()">Reset Game</button>
             <p id="status">Player 1's Turn (Red)</p>
         </div>
     </div>
@@ -74,7 +74,7 @@
     <div id="endgame-modal">
         <div id="endgame-modal-content">
             <p>Game Over!</p>
-            <button onclick="startGame()">Play Again</button>
+            <button onclick="game.resetGame()">Play Again</button>
         </div>
     </div>
     <script src="js/Animations/hover.js"></script>
