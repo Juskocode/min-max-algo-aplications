@@ -195,7 +195,7 @@ function minimax(newboard, player, depth = currentDepth, alpha, beta) {
         else {
             if (move.score < bestMove.score)
                 bestMove = move;
-            beta = Math.max(beta, move.score);
+            beta = Math.min(beta, move.score);
         }
 
         //prune if alpha >= beta
