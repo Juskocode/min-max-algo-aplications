@@ -16,8 +16,4 @@ export default class AI {
         const squareIdToFill = row * board.cols + col;
         return squareIdToFill; // Returns the square ID where the AI will place its piece
     }
-
-    
-
-    
 }
