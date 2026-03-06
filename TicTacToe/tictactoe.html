@@ -8,47 +8,58 @@
 </head>
 <body>
     <!-- Symbol selection -->
-    <div class="choose-symbol">
-        <h3>Choose Your Symbol</h3>
-        <button onclick="chooseSymbol('X')">X</button>
-        <button onclick="chooseSymbol('O')">O</button>
+    <div id="symbol-modal" class="modal">
+        <div class="modal-content">
+            <h3>Choose Your Symbol</h3>
+            <div class="symbol-buttons">
+                <button onclick="chooseSymbol('X')">X</button>
+                <button onclick="chooseSymbol('O')">O</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Tic-tac-toe board -->
-    <table>
-        <tr>
-            <td class="cell" id="0"></td>
-            <td class="cell" id="1"></td>
-            <td class="cell" id="2"></td>
-        </tr>
-        <tr>
-            <td class="cell" id="3"></td>
-            <td class="cell" id="4"></td>
-            <td class="cell" id="5"></td>
-        </tr>
-        <tr>
-            <td class="cell" id="6"></td>
-            <td class="cell" id="7"></td>
-            <td class="cell" id="8"></td>
-        </tr>
-    </table>
+    <div class="container">
+        <h1>Tic Tac Toe</h1>
+        
+        <!-- Statistics -->
+        <div class="stats"></div>
 
-     <!-- Depth selection -->
-	 <div class="depth-selection">
-        <label for="depth">Select Minimax Depth: <span id="depth-value">5</span></label>
-        <input type="range" id="depth" min="1" max="9" value="9" oninput="updateDepth(this.value)">
+        <!-- Tic-tac-toe board -->
+        <table id="board">
+            <tr>
+                <td class="cell" id="0"></td>
+                <td class="cell" id="1"></td>
+                <td class="cell" id="2"></td>
+            </tr>
+            <tr>
+                <td class="cell" id="3"></td>
+                <td class="cell" id="4"></td>
+                <td class="cell" id="5"></td>
+            </tr>
+            <tr>
+                <td class="cell" id="6"></td>
+                <td class="cell" id="7"></td>
+                <td class="cell" id="8"></td>
+            </tr>
+        </table>
+
+        <!-- Depth selection -->
+        <div class="depth-selection">
+            <label for="depth">Minimax Depth: <span id="depth-value">9</span></label>
+            <input type="range" id="depth" min="1" max="9" value="9" oninput="updateDepth(this.value)">
+        </div>
+
+        <!-- Replay button -->
+        <button class="replay-button" onClick="startGame()">New Game</button>
     </div>
 
-    <!-- Statistics -->
-	<div class="stats"></div>
-
-    <!-- Endgame message -->
-    <div class="endgame">
-        <div class="text"></div>
+    <!-- Endgame modal -->
+    <div id="endgame-modal" class="modal">
+        <div class="modal-content">
+            <div class="text"></div>
+            <button onclick="startGame()">Play Again</button>
+        </div>
     </div>
-
-    <!-- Replay button -->
-	<button class="replay-button" onClick="startGame()">Replay</button>
 
     <script src="js/script.js"></script>
 </body>
