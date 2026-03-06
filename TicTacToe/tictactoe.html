@@ -18,39 +18,46 @@
         </div>
     </div>
 
-    <div class="container">
-        <h1>Tic Tac Toe</h1>
-        
-        <!-- Statistics -->
-        <div class="stats"></div>
+    <div class="main-layout">
+        <div class="container">
+            <h1>Tic Tac Toe</h1>
+            
+            <!-- Statistics -->
+            <div class="stats"></div>
 
-        <!-- Tic-tac-toe board -->
-        <table id="board">
-            <tr>
-                <td class="cell" id="0"></td>
-                <td class="cell" id="1"></td>
-                <td class="cell" id="2"></td>
-            </tr>
-            <tr>
-                <td class="cell" id="3"></td>
-                <td class="cell" id="4"></td>
-                <td class="cell" id="5"></td>
-            </tr>
-            <tr>
-                <td class="cell" id="6"></td>
-                <td class="cell" id="7"></td>
-                <td class="cell" id="8"></td>
-            </tr>
-        </table>
+            <!-- Tic-tac-toe board -->
+            <table id="board">
+                <tr>
+                    <td class="cell" id="0"></td>
+                    <td class="cell" id="1"></td>
+                    <td class="cell" id="2"></td>
+                </tr>
+                <tr>
+                    <td class="cell" id="3"></td>
+                    <td class="cell" id="4"></td>
+                    <td class="cell" id="5"></td>
+                </tr>
+                <tr>
+                    <td class="cell" id="6"></td>
+                    <td class="cell" id="7"></td>
+                    <td class="cell" id="8"></td>
+                </tr>
+            </table>
 
-        <!-- Depth selection -->
-        <div class="depth-selection">
-            <label for="depth">Minimax Depth: <span id="depth-value">9</span></label>
-            <input type="range" id="depth" min="1" max="9" value="9" oninput="updateDepth(this.value)">
+            <!-- Depth selection -->
+            <div class="depth-selection">
+                <label for="depth">Minimax Depth: <span id="depth-value">9</span></label>
+                <input type="range" id="depth" min="1" max="9" value="9" oninput="updateDepth(this.value)">
+            </div>
+
+            <!-- Replay button -->
+            <button class="replay-button" onClick="startGame()">New Game</button>
         </div>
 
-        <!-- Replay button -->
-        <button class="replay-button" onClick="startGame()">New Game</button>
+        <div class="visualization-container">
+            <h2>Minimax Search Tree</h2>
+            <div id="tree-visualization" class="tree-visualization"></div>
+        </div>
     </div>
 
     <!-- Endgame modal -->
@@ -61,7 +68,7 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>
 
