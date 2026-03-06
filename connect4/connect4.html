@@ -9,6 +9,16 @@
 <body>
     <div class="container">
         <h1>Connect Four</h1>
+        <div class="ai-thinking" id="ai-thinking">AI is thinking...</div>
+        <div class="weights-container" id="weights-container">
+            <div class="weight-label" id="weight-0">-</div>
+            <div class="weight-label" id="weight-1">-</div>
+            <div class="weight-label" id="weight-2">-</div>
+            <div class="weight-label" id="weight-3">-</div>
+            <div class="weight-label" id="weight-4">-</div>
+            <div class="weight-label" id="weight-5">-</div>
+            <div class="weight-label" id="weight-6">-</div>
+        </div>
         <table class="game-board" id="game-board">
             <tr>
                 <td class="cell" id="0"></td>
@@ -68,6 +78,17 @@
         <div class="controls">
             <button id="reset" onClick="game.resetGame()">Reset Game</button>
             <p id="status">Player 1's Turn (Red)</p>
+        </div>
+        <div class="educational-info">
+            <h3>How it works: Minimax & Heuristics</h3>
+            <p><strong>Minimax Algorithm:</strong> The AI simulates thousands of future game states (up to 5 moves ahead) to find the path that guarantees the best outcome, assuming the opponent also plays optimally.</p>
+            <p><strong>Heuristics:</strong> Since looking at every possible move until the end is impossible, the AI uses a scoring system (weights) to evaluate positions:</p>
+            <ul>
+                <li><strong>Center Advantage:</strong> Placing pieces in the middle columns offers more winning connections.</li>
+                <li><strong>Line Potential:</strong> Sets of 2 or 3 pieces that can become 4 are highly valued.</li>
+                <li><strong>Defensive Play:</strong> The AI prioritizes blocking your winning lines.</li>
+            </ul>
+            <p>The numbers above the board show the <strong>AI's score</strong> for each move. Higher is better!</p>
         </div>
     </div>
     <!-- End Game Modal -->
