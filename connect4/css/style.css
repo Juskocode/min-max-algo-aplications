@@ -98,6 +98,55 @@ button:hover {
 #status {
     margin-top: 10px;
     font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* AI Thinking & Weight Visualization */
+.ai-thinking {
+    visibility: hidden;
+    color: var(--neon-purple);
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+.weights-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    width: 420px; /* 60px * 7 */
+    background: rgba(40, 42, 54, 0.8);
+    border-radius: 10px;
+    padding: 5px 0;
+    border: 1px solid var(--neon-purple);
+}
+
+.weight-label {
+    width: 60px;
+    font-size: 12px;
+    color: var(--neon-green);
+    text-align: center;
+    text-shadow: none;
+}
+
+.educational-info {
+    margin-top: 30px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.9em;
+    line-height: 1.4;
+    border: 1px dashed var(--neon-purple);
+}
+
+.educational-info h3 {
+    margin-top: 0;
+    color: var(--neon-green);
+    text-align: center;
 }
 
 /* Modal for End Game Popup */

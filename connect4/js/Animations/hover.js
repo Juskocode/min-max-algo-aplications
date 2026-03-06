@@ -6,11 +6,11 @@ cells.forEach(cell => {
         const columnIndex = cell.cellIndex;
         const outlineColor = '#f7ddec'; // Neon pink outline for hover effect
 
-        // Apply only the border effect to the circular cells in the column that have no background color
+        // Apply only the border effect to the circular cells in the column that have no piece
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].cellIndex === columnIndex) {
-                // Check if the cell has no background color (assume unoccupied cells have an empty background)
-                if (!cells[i].style.backgroundColor || cells[i].style.backgroundColor === 'transparent') {
+                // Check if the cell has no piece (no red or yellow class)
+                if (!cells[i].classList.contains('red') && !cells[i].classList.contains('yellow')) {
                     cells[i].style.outline = `2px solid ${outlineColor}`; // Apply neon outline to empty cells in the column
                     cells[i].style.boxShadow = `0 0 10px ${outlineColor}`; // Apply subtle neon glow around the border
                 }
