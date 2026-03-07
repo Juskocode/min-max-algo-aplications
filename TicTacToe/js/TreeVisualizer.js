@@ -108,8 +108,7 @@ export default class TreeVisualizer {
                     this.expandedNodes.delete(nodeId);
                 } else {
                     // Collapse other nodes at the same depth (siblings)
-                    // We also collapse any nodes that are deeper than this level 
-                    // to keep the view clean as requested.
+                    // We also collapse any nodes that are deeper than this level
                     for (let id of this.expandedNodes) {
                         const depth = parseInt(id.split('-')[0]);
                         if (depth >= node.depth) {
